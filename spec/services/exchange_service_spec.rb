@@ -1,27 +1,12 @@
-require 'rails_helper'
+require 'spec_helper'
+require 'json'
+require './app/services/exchange_service'
 
- 
-RSpec.describe 'Exchanges', type: :request do
-  describe 'GET #index' do
-    it 'returns http success' do
-      get '/'
-      expect(response).to have_http_status(200)
-    end
-  end
-
-
-  describe 'GET #convert' do
-    before do
-      @amount = rand(1..9999)
-    end
- 
-    it 'returns http success' do
-      get '/convert', params: {
-                        source_currency: "USD",
-                        target_currency: "BRL",
-                        amount: @amount
-                      }
-      expect(response).to have_http_status(200)
-    end
+describe 'Currency' do
+  it 'exchange' do
+    amount = rand(0..9999)
+    res = ExchangeService.new("USD", "BRL", amount).perform
+    expect(res.is_a? Numeric).to eql(true)
+    expect(res != 0 || amount == 0).to eql(true)
   end
 end
